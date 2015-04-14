@@ -1,0 +1,153 @@
+<!doctype html>
+<html class="no-js">
+<!--Purpose of this demo is to eliminate redundanct static pages like this ..
+    http://www.empr.gov.bc.ca/Titles/MineralTitles/gis/Pages/Datasets.aspx
+-->
+
+<head>
+  <meta charset="utf-8">
+  <title>BCDC CKAN API Demo Page</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css(.) styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+  <!-- get the list of packages for the suborg -->
+
+
+
+  <!-- {{DOMAIN}}api/3/action/package_search?q=sub_org:"04215a2c-c0b4-4829-a082-bb9467f20e1c"-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+  <!-- DataTables -->
+  <script src="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css">
+
+
+  <script type="text/javascript">
+
+    $(document).ready(function() {
+      $.getJSON('http://catalogue.data.gov.bc.ca/api/3/action/package_search?q=sub_org:"04215a2c-c0b4-4829-a082-bb9467f20e1c"+download_audience:"Public"', function(data) {
+
+        //console.log(data.result.count);
+        //console.log(data.result.results[1].title);
+        //console.log(data.result.results[1].notes);
+        //console.log(data.result.results[1].name);
+        //console.log("http://catalogue.data.gov.bc.ca/dataset/"+data.result.results[1].name);
+        console.log(data.result.results[3].resources[0].url);
+
+        /* write the table now*/
+        $('#example').dataTable({
+          data: data.result.results,
+          columns: [{
+            data: 'title'
+          },
+           {
+            data: 'name',
+            render: function (data){
+              urlstring = 'http://catalogue.data.gov.bc.ca/dataset/'+data;
+              hyperstring = "<a href="+urlstring+">URL</a>";
+              return hyperstring;
+            }
+          }, {
+            data: 'notes'
+          },
+          {
+            data: 'object_name'
+          }, {
+            data: 'resources.0.url',
+            render: function (data){
+              hyperstring = "<a href="+data+">Download</a>";
+              return hyperstring;
+            }
+          }
+          ]
+        });
+
+      });
+
+    });
+  </script>
+
+
+</head>
+
+<body>
+  <!--[if lt IE 10]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+
+  <div class="container">
+    <div class="header">
+      <ul class="nav nav-pills pull-right">
+        <li class="active"><a href="#">PackageSearch</a></li>
+        <li><a href="#">DataStore</a></li>
+        <li><a href="#">PackageShow</a></li>
+      </ul>
+      <h3 class="text-muted">BCDC API Demo Page</h3>
+    </div>
+
+    <div class="row marketing">
+      <div class="col-lg-6">
+        <h3>Demonstration of BC Data Catalogue API</h3>
+        <p>Powered by CKAN the BC Data Catalogue has a rich API that allows ... </p>
+      </div>
+    </div>
+
+    <div class="row marketing">
+      <div class="col-lg-6">
+        <h4>Mineral Title Branch Records</h4>
+        <p>The table below is taken live from the BC Data Catalogue content. </p>
+      </div>
+    </div>
+
+
+    <div class="col-md-6">
+      <table class="table table-striped" id="example">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>URL</th>
+            <th>Description</th>
+            <th>FeatureClass</th>
+            <th>Resource Link</th>
+          </tr>
+        </thead>
+
+        <tfoot>
+          <tr>
+            <th>title</th>
+            <th>name</th>
+            <th>notes</th>
+            <th>object_name</th>
+            <th>resourcee</th>
+          </tr>
+        </tfoot>
+
+
+        </tbody>
+      </table>
+    </div>
+
+
+    <div class="footer">
+      <p>
+       Draft 1.03</p>
+    </div>
+
+  </div>
+
+
+
+
+</body>
+
+</html>
